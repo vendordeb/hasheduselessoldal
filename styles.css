@@ -1,0 +1,336 @@
+:root {
+  --bg-base: #131314;        
+  --bg-surface: #1E1F20;     
+  --text-primary: #E3E3E3;   
+  --text-muted: #C4C7C5;     
+  --border-subtle: rgba(255, 255, 255, 0.08); 
+  --led-purple: #A855F7;
+  --led-glow: rgba(168, 85, 247, 0.4);
+  --led-rim: rgba(168, 85, 247, 0.25);
+  --strike-red: #ff3b30;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: transparent; 
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+  overflow-x: hidden;
+  scrollbar-width: none; 
+}
+
+body::-webkit-scrollbar { 
+  display: none; 
+}
+
+/* 1. Film Grain Noise Overlay */
+.noise-overlay {
+  position: fixed;
+  top: 0; 
+  left: 0; 
+  width: 100vw; 
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.04; 
+  background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+}
+
+/* 2. Interactive Cursor Glow */
+#cursor-glow {
+  position: fixed;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.08) 0%, rgba(0,0,0,0) 60%);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: -1; 
+  transition: opacity 0.3s ease;
+}
+
+/* Ambient Canvas Background */
+#ambient-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -2;
+  background-color: var(--bg-base);
+  pointer-events: none;
+}
+
+/* Frosted Glass Navbar */
+.navbar {
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  padding: 1.2rem 8%;
+  background-color: rgba(19, 19, 20, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-subtle);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 1.4rem;
+  letter-spacing: 1px;
+}
+
+/* Hero Section */
+.hero {
+  text-align: center;
+  padding: 12vh 1rem 8vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.hero h1 {
+  font-size: clamp(3.5rem, 8vw, 6rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+  cursor: default;
+  animation: textPulse 1s infinite alternate ease-in-out;
+  transition: text-shadow 0.4s ease;
+}
+
+@keyframes textPulse {
+  0% { text-shadow: 0 0 10px rgba(227, 227, 227, 0.05), 0 0 20px rgba(227, 227, 227, 0.02); }
+  100% { text-shadow: 0 0 24px rgba(227, 227, 227, 0.4), 0 0 45px rgba(227, 227, 227, 0.15); }
+}
+
+.hero h1:hover {
+  text-shadow: 0 0 32px rgba(227, 227, 227, 0.6), 0 0 60px rgba(227, 227, 227, 0.25);
+}
+
+.hero p {
+  color: var(--text-muted);
+  font-size: 1.25rem;
+  font-weight: 400;
+  margin-bottom: 3rem;
+  letter-spacing: 0.01em;
+}
+
+/* Glowing Pill Button */
+.cta-button {
+  background-color: var(--text-primary);
+  color: var(--bg-base);
+  border: none;
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 999px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  z-index: 10;
+}
+
+.cta-button:hover {
+  background-color: #ffffff;
+  transform: scale(1.03);
+  box-shadow: 0 0 32px var(--led-glow); 
+}
+
+/* 3. Minimalist Scroll Indicator */
+.scroll-indicator {
+  margin-top: 4rem;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+}
+
+.scroll-line {
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(227,227,227,0.8), transparent);
+  animation: scrollDrop 2s cubic-bezier(0.77, 0, 0.175, 1) infinite;
+}
+
+@keyframes scrollDrop {
+  0% { transform: scaleY(0); transform-origin: top; opacity: 0; }
+  50% { transform: scaleY(1); transform-origin: top; opacity: 1; }
+  50.1% { transform: scaleY(1); transform-origin: bottom; opacity: 1; }
+  100% { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
+}
+
+/* Shop Grid */
+.shop-container {
+  padding: 2rem 8% 8rem;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 2.5rem;
+  max-width: 1400px; 
+  margin: 0 auto;
+}
+
+@media (max-width: 1024px) {
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr); 
+  }
+}
+
+@media (max-width: 768px) {
+  .product-grid {
+    grid-template-columns: 1fr; 
+  }
+}
+
+/* Sleek Apple-Style Cards */
+.product-card {
+  position: relative; /* CRUCIAL: Keeps the badge locked to the card */
+  background-color: rgba(30, 31, 32, 0.3); 
+  backdrop-filter: blur(16px); 
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 24px;
+  border: 1px solid var(--border-subtle);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.5s ease, border-color 0.5s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-8px) scale(1.01);
+  border-color: var(--led-glow);
+  box-shadow: 
+    0 24px 48px rgba(0, 0, 0, 0.8), 
+    0 0 40px var(--led-glow),
+    inset 0 0 0 1px var(--led-rim); 
+}
+
+/* Premium "Hot" Badge */
+.badge-hot {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background-color: rgba(255, 59, 48, 0.15); 
+  color: var(--strike-red);
+  border: 1px solid rgba(255, 59, 48, 0.3);
+  padding: 0.4rem 0.8rem;
+  border-radius: 99px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  z-index: 10;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 12px rgba(255, 59, 48, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.badge-fav {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background-color: rgba(241, 255, 48, 0.15); 
+  color: yellow;
+  border: 1px solid rgba(255, 252, 48, 0.3);
+  padding: 0.4rem 0.8rem;
+  border-radius: 99px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  z-index: 10;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 12px rgba(255, 241, 48, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* Image Area */
+.product-img {
+  width: 100%;
+  aspect-ratio: 1 / 1; 
+  object-fit: cover; 
+  display: block;
+  border-bottom: 1px solid var(--border-subtle);
+  transition: opacity 0.4s ease;
+}
+
+.product-card:hover .product-img {
+  opacity: 0.85;
+}
+
+/* Typography and Pricing */
+.product-info {
+  padding: 2rem;
+  text-align: center;
+}
+
+.product-info h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
+}
+
+.price-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.8rem;
+}
+
+.original-price {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-decoration: line-through;
+  text-decoration-color: var(--strike-red);
+  text-decoration-thickness: 2px;
+}
+
+.discount-price {
+  color: var(--text-primary);
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+/* Instagram Social Icon */
+.social-icon {
+  position: absolute;
+  right: 8%; /* Aligns perfectly with the navbar padding */
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.social-icon svg {
+  width: 22px;
+  height: 22px;
+  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Hover Animation: Lifts up slightly, turns white, and emits the purple LED glow */
+.social-icon:hover {
+  color: var(--text-primary);
+  transform: translateY(-3px) scale(1.1);
+  filter: drop-shadow(0 4px 12px var(--led-purple));
+}
